@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface TestimonialItem {
   id: string;
@@ -59,18 +60,6 @@ export const Testimonials: React.FC = () => {
     return () => clearInterval(timer);
   }, [isPaused, isMouseDown, currentIndex]);
 
-  const handlePrev = () => {
-    const nextIdx = currentIndex <= 0 ? TESTIMONIALS.length - 1 : currentIndex - 1;
-    setCurrentIndex(nextIdx);
-    scrollToCard(nextIdx);
-  };
-
-  const handleNext = () => {
-    const nextIdx = (currentIndex + 1) % TESTIMONIALS.length;
-    setCurrentIndex(nextIdx);
-    scrollToCard(nextIdx);
-  };
-
   const scrollToCard = (index: number) => {
     if (!sliderRef.current) return;
     const cardElement = sliderRef.current.children[index] as HTMLElement;
@@ -85,6 +74,19 @@ export const Testimonials: React.FC = () => {
     }
   };
 
+  const handleNext = () => {
+    const nextIdx = (currentIndex + 1) % TESTIMONIALS.length;
+    setCurrentIndex(nextIdx);
+    scrollToCard(nextIdx);
+  };
+
+  const handlePrev = () => {
+    const prevIdx = (currentIndex - 1 + TESTIMONIALS.length) % TESTIMONIALS.length;
+    setCurrentIndex(prevIdx);
+    scrollToCard(prevIdx);
+  };
+
+  // Mouse Drag Handlers
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!sliderRef.current) return;
     setIsMouseDown(true);
@@ -94,7 +96,6 @@ export const Testimonials: React.FC = () => {
 
   const handleMouseLeave = () => {
     setIsMouseDown(false);
-    setIsPaused(false);
   };
 
   const handleMouseUp = () => {
@@ -105,16 +106,22 @@ export const Testimonials: React.FC = () => {
     if (!isMouseDown || !sliderRef.current) return;
     e.preventDefault();
     const x = e.pageX - sliderRef.current.offsetLeft;
-    const walk = (x - startX) * 1.8;
+    const walk = (x - startX) * 1.6;
     sliderRef.current.scrollLeft = scrollLeftState - walk;
   };
 
   return (
-    <section id="testimonials" className="w-full bg-white py-24 overflow-hidden select-none">
-      <div className="w-full max-w-7xl mx-auto flex flex-col gap-14">
+    <section id="testimonials" className="w-full bg-white py-24 overflow-hidden select-none border-t border-slate-100">
+      <div className="w-full max-w-7xl mx-auto flex flex-col items-center gap-14 text-center">
 
         {/* Section Header */}
-        <div className="flex flex-col items-center text-center gap-3 px-6 md:px-16">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6 }}
+          className="flex flex-col items-center gap-3 px-4 md:px-8"
+        >
           <span className="text-xs font-semibold text-slate-500 uppercase tracking-widest block">
             Testimonials
           </span>
@@ -122,10 +129,14 @@ export const Testimonials: React.FC = () => {
             <span className="font-extrabold text-slate-950">Trusted by many,</span>{' '}
             <span className="font-light text-slate-600 block sm:inline">loved by more</span>
           </h2>
-        </div>
+        </motion.div>
 
         {/* Sliding Viewport Container - Auto-Play + Mouse Drag */}
-        <div
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, delay: 0.2 }}
           className="w-full overflow-hidden relative cursor-grab active:cursor-grabbing"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
@@ -161,66 +172,79 @@ export const Testimonials: React.FC = () => {
                     }}
                     className="w-full h-full object-cover object-center"
                   />
-                </div>
 
-                {/* Right Quote Content Box - Seamlessly Attached */}
-                <div className="w-[290px] sm:w-[420px] md:w-[480px] lg:w-[520px] h-[340px] md:h-[370px] bg-[#f8fafc] p-7 md:p-9 flex flex-col justify-between shrink-0">
-                  
-                  {/* Author Info */}
-                  <div className="space-y-1">
-                    <h3 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
-                      {item.name}
-                    </h3>
-                    <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">
-                      {item.role}
+                  {/* Stat Badge Overlay Pills */}
+                  <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
+                    <span className="inline-block px-3 py-1.5 rounded-full bg-slate-950/70 border border-white/20 backdrop-blur-md text-[10px] sm:text-xs font-medium text-white tracking-wide shadow-md">
+                      100+ country client
+                    </span>
+                    <span className="inline-block px-3 py-1.5 rounded-full bg-slate-950/70 border border-white/20 backdrop-blur-md text-[10px] sm:text-xs font-medium text-white tracking-wide shadow-md">
+                      $68B in revenue
                     </span>
                   </div>
-
-                  {/* Quote Paragraph */}
-                  <blockquote className="text-slate-800 text-sm sm:text-base md:text-lg font-normal leading-relaxed tracking-tight max-w-lg py-2">
-                    "{item.quote}"
-                  </blockquote>
-
-                  {/* Empty Footer spacing for alignment */}
-                  <div className="h-2" />
-
                 </div>
+
+                {/* Right Quote Text Box - Directly Joined without Space */}
+                <div className="w-[320px] sm:w-[420px] md:w-[480px] h-[340px] md:h-[370px] p-8 sm:p-10 md:p-12 flex flex-col justify-between text-left shrink-0 bg-[#f8fafc]">
+                  {/* Quote Body */}
+                  <div>
+                    <p className="text-slate-700 text-sm sm:text-base md:text-lg font-normal leading-relaxed tracking-tight">
+                      "{item.quote}"
+                    </p>
+                  </div>
+
+                  {/* Name & Title */}
+                  <div className="pt-6 border-t border-slate-200/80">
+                    <h3 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
+                      {item.name}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-500 font-medium">
+                      {item.role}
+                    </p>
+                  </div>
+                </div>
+
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
-        {/* Bottom Controls Row: Navigation Arrows (Left) & Stat Pills (Right) */}
-        <div className="max-w-6xl mx-auto w-full flex flex-col sm:flex-row items-center justify-between gap-6 px-6 md:px-16 pt-2">
-          
-          {/* Left Arrow Navigation Buttons */}
+        {/* Carousel Control Dots & Arrow Buttons */}
+        <div className="flex items-center justify-between w-full max-w-6xl px-6 md:px-16 pt-2">
+          {/* Indicator Dots */}
+          <div className="flex items-center gap-2">
+            {TESTIMONIALS.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => {
+                  setCurrentIndex(idx);
+                  scrollToCard(idx);
+                }}
+                className={`h-2.5 rounded-full transition-all duration-300 ${
+                  currentIndex === idx ? 'w-8 bg-[#0a111e]' : 'w-2.5 bg-slate-300 hover:bg-slate-400'
+                }`}
+                aria-label={`Go to testimonial ${idx + 1}`}
+              />
+            ))}
+          </div>
+
+          {/* Navigation Arrows */}
           <div className="flex items-center gap-3">
             <button
               onClick={handlePrev}
-              className="w-11 h-11 rounded-full border border-slate-300 text-slate-800 flex items-center justify-center hover:bg-[#0a111e] hover:text-white hover:border-[#0a111e] transition-all cursor-pointer shadow-sm"
-              aria-label="Previous testimonial"
+              className="w-11 h-11 rounded-full bg-[#f8fafc] border border-slate-200 text-slate-800 flex items-center justify-center hover:bg-[#0a111e] hover:text-white hover:border-[#0a111e] transition-all shadow-sm active:scale-95"
+              aria-label="Previous Testimonial"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
             <button
               onClick={handleNext}
-              className="w-11 h-11 rounded-full bg-[#0a111e] text-white flex items-center justify-center hover:bg-slate-800 transition-all cursor-pointer shadow-md"
-              aria-label="Next testimonial"
+              className="w-11 h-11 rounded-full bg-[#f8fafc] border border-slate-200 text-slate-800 flex items-center justify-center hover:bg-[#0a111e] hover:text-white hover:border-[#0a111e] transition-all shadow-sm active:scale-95"
+              aria-label="Next Testimonial"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
           </div>
-
-          {/* Right Stat Pills */}
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="px-6 py-2.5 rounded-full border border-slate-200 bg-white text-xs text-slate-600 font-normal shadow-sm">
-              <span className="font-bold text-slate-900">100+</span> country client
-            </div>
-            <div className="px-6 py-2.5 rounded-full border border-slate-200 bg-white text-xs text-slate-600 font-normal shadow-sm">
-              <span className="font-bold text-slate-900">$68B</span> in revenue
-            </div>
-          </div>
-
         </div>
 
       </div>

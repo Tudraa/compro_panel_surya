@@ -1,10 +1,11 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 import heroImg from '../assets/Hero.jpeg';
 
 export const Hero: React.FC = () => {
   return (
-    <section className="relative min-h-screen w-full flex flex-col justify-between pt-36 pb-16 px-6 md:px-16 text-white overflow-hidden">
+    <section id="home" className="relative min-h-screen w-full flex flex-col justify-between pt-36 pb-16 px-6 md:px-16 text-white overflow-hidden">
       {/* Background Image with Dark Gradient Overlay */}
       <div className="absolute inset-0 z-0">
         <img
@@ -19,17 +20,27 @@ export const Hero: React.FC = () => {
       </div>
 
       {/* Main Headline (Top Left Alignment) */}
-      <div className="relative z-10 max-w-4xl mt-4 md:mt-8">
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="relative z-10 max-w-4xl mt-4 md:mt-8"
+      >
         <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-[5.5rem] xl:text-[6.25rem] font-bold tracking-tight text-white leading-[0.96] font-sans drop-shadow-md select-none">
           <span className="block font-medium tracking-tight">Innovative Solar</span>
           <span className="block font-bold tracking-tight mt-1">Home Lightning</span>
           <span className="block font-extrabold tracking-tight mt-1">Solution<span className="text-emerald-400 font-black">.</span></span>
         </h1>
-      </div>
+      </motion.div>
 
 
       {/* Bottom Content Row: Subtext & CTA (Left) + Stats (Right) */}
-      <div className="relative z-10 w-full flex flex-col md:flex-row items-start md:items-end justify-between gap-10 pt-16">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+        className="relative z-10 w-full flex flex-col md:flex-row items-start md:items-end justify-between gap-10 pt-16"
+      >
         
         {/* Subtext & Get Started Button */}
         <div className="max-w-md space-y-6">
@@ -38,7 +49,7 @@ export const Hero: React.FC = () => {
           </p>
           
           <a
-            href="#get-started"
+            href="#about"
             className="inline-flex items-center gap-3 pl-6 pr-2 py-2 rounded-full bg-white text-slate-900 font-semibold text-sm hover:bg-slate-100 transition-all shadow-lg group"
           >
             <span>Get Started</span>
@@ -69,7 +80,7 @@ export const Hero: React.FC = () => {
           </div>
         </div>
 
-      </div>
+      </motion.div>
     </section>
   );
 };

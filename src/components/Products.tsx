@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface ProductItem {
   id: string;
@@ -60,11 +61,11 @@ const PRODUCTS: ProductItem[] = [
     image: 'https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?w=800&auto=format&fit=crop&q=80'
   },
   {
-    id: 'microgrid-controller',
+    id: 'grid-tie-system',
     number: '08',
-    name: 'Microgrid Controller',
-    subtitle: 'intelligent energy management',
-    image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=80'
+    name: 'Grid-Tie Solar Kit',
+    subtitle: 'seamless net metering setup',
+    image: 'https://images.unsplash.com/photo-1509391365360-2e959784a276?w=800&auto=format&fit=crop&q=80'
   }
 ];
 
@@ -72,37 +73,42 @@ export const Products: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  // Maximum items visible per view (4 cards on desktop, 2 on tablet, 1 on mobile)
   const maxVisibleCount = 4;
   const maxIndex = PRODUCTS.length - maxVisibleCount;
 
-  // Auto-play continuous slider (every 3.5 seconds)
+  const nextSlide = () => {
+    setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
+  };
+
+  const prevSlide = () => {
+    setCurrentIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
+  };
+
+  // Auto sliding interval (3.5s)
   useEffect(() => {
     if (isPaused) return;
 
     const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
+      nextSlide();
     }, 3500);
 
     return () => clearInterval(timer);
-  }, [isPaused, maxIndex]);
-
-  const handlePrev = () => {
-    setCurrentIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
-  };
-
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
-  };
+  }, [currentIndex, isPaused, maxIndex]);
 
   return (
-    <section id="products" className="w-full bg-white py-24 px-6 md:px-16 overflow-hidden">
+    <section id="products" className="w-full bg-white py-20 px-6 md:px-16 overflow-hidden">
       <div className="max-w-6xl mx-auto flex flex-col gap-16">
 
         {/* Header Row: Left Subtitle & Main Title */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6 }}
+          className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start"
+        >
           <div className="md:col-span-4">
-            <span className="text-xs font-semibold text-slate-500 tracking-wider block pt-2">
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block pt-2">
               Our Product
             </span>
           </div>
@@ -116,10 +122,14 @@ export const Products: React.FC = () => {
               <span className="text-slate-900 font-bold">{currentIndex + 1} - {Math.min(currentIndex + maxVisibleCount, PRODUCTS.length)}</span> / {PRODUCTS.length} Products
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Slider Viewport Window with Auto-Pause on Hover */}
-        <div
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, delay: 0.2 }}
           className="w-full overflow-hidden relative"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
@@ -138,13 +148,13 @@ export const Products: React.FC = () => {
               >
                 {/* Card Top: Number */}
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-slate-400">
-                    {product.number}
+                  <span className="text-xs font-bold text-slate-500 font-mono">
+                    ({product.number})
                   </span>
                 </div>
 
-                {/* Product Visual */}
-                <div className="w-full h-48 flex items-center justify-center my-4 p-2 overflow-hidden rounded-2xl bg-white/60">
+                {/* Card Center: Product Image */}
+                <div className="my-auto py-4 flex items-center justify-center h-44 overflow-hidden">
                   <img
                     src={product.image}
                     alt={product.name}
@@ -152,58 +162,62 @@ export const Products: React.FC = () => {
                     onError={(e) => {
                       (e.currentTarget as HTMLImageElement).src = 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=800&auto=format&fit=crop&q=80';
                     }}
-                    className="max-h-full max-w-full object-cover rounded-xl group-hover:scale-108 transition-transform duration-500 shadow-sm"
+                    className="max-h-full max-w-full object-contain group-hover:scale-110 transition-transform duration-500 rounded-xl shadow-sm"
                   />
                 </div>
 
-                {/* Card Bottom Info & Action Circle */}
-                <div className="flex items-end justify-between pt-4 border-t border-slate-200/60">
-                  <div className="space-y-1 pr-2">
-                    <h3 className="text-base font-bold text-slate-900 leading-snug tracking-tight">
+                {/* Card Bottom: Product Info & Circle Arrow Button */}
+                <div className="flex items-end justify-between pt-2">
+                  <div className="space-y-1 max-w-[75%]">
+                    <h3 className="text-base font-bold text-slate-900 leading-snug tracking-tight group-hover:text-[#0d5c58] transition-colors">
                       {product.name}
                     </h3>
-                    <p className="text-xs text-slate-500 font-normal leading-tight">
+                    <p className="text-[11px] text-slate-500 font-medium leading-tight line-clamp-1">
                       {product.subtitle}
                     </p>
                   </div>
 
-                  {/* Dark Action Circle Button */}
-                  <div className="w-9 h-9 rounded-full bg-[#0a111e] text-white flex items-center justify-center shrink-0 group-hover:bg-[#0d5c58] group-hover:scale-110 transition-all duration-300 shadow-md">
-                    <ArrowRight className="w-4 h-4" />
+                  <div className="w-10 h-10 rounded-full bg-[#0a111e] text-white flex items-center justify-center group-hover:bg-[#0d5c58] group-hover:scale-105 transition-all shadow-md shrink-0">
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                   </div>
                 </div>
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
-        {/* Slider Interactive Navigation Control Buttons */}
-        <div className="flex items-center justify-center gap-4 pt-2">
-          <button
-            onClick={handlePrev}
-            disabled={currentIndex === 0}
-            className={`w-11 h-11 rounded-full border flex items-center justify-center transition-all cursor-pointer ${
-              currentIndex === 0
-                ? 'border-slate-200 text-slate-300 cursor-not-allowed'
-                : 'border-slate-300 text-slate-800 hover:bg-[#0a111e] hover:text-white hover:border-[#0a111e] shadow-sm'
-            }`}
-            aria-label="Previous product"
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </button>
+        {/* Bottom Carousel Controls: Prev/Next Arrow Buttons */}
+        <div className="flex items-center justify-between pt-2">
+          <div className="flex items-center gap-2">
+            {Array.from({ length: maxIndex + 1 }).map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setCurrentIndex(idx)}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  currentIndex === idx ? 'w-8 bg-[#0d5c58]' : 'w-2 bg-slate-200 hover:bg-slate-300'
+                }`}
+                aria-label={`Go to slide ${idx + 1}`}
+              />
+            ))}
+          </div>
 
-          <button
-            onClick={handleNext}
-            disabled={currentIndex >= maxIndex}
-            className={`w-11 h-11 rounded-full border flex items-center justify-center transition-all cursor-pointer ${
-              currentIndex >= maxIndex
-                ? 'border-slate-200 text-slate-300 cursor-not-allowed'
-                : 'border-slate-300 text-slate-800 hover:bg-[#0a111e] hover:text-white hover:border-[#0a111e] shadow-sm'
-            }`}
-            aria-label="Next product"
-          >
-            <ChevronRight className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={prevSlide}
+              className="w-11 h-11 rounded-full bg-[#f2f4f7] border border-slate-200 text-slate-800 flex items-center justify-center hover:bg-[#0a111e] hover:text-white hover:border-[#0a111e] transition-all shadow-sm active:scale-95"
+              aria-label="Previous Products"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+
+            <button
+              onClick={nextSlide}
+              className="w-11 h-11 rounded-full bg-[#f2f4f7] border border-slate-200 text-slate-800 flex items-center justify-center hover:bg-[#0a111e] hover:text-white hover:border-[#0a111e] transition-all shadow-sm active:scale-95"
+              aria-label="Next Products"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
       </div>

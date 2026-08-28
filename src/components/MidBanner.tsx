@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 import manInstallationImg from '../assets/man_installation_on_roft.jpeg';
 
 interface MidBannerProps {
@@ -11,7 +12,13 @@ export const MidBanner: React.FC<MidBannerProps> = ({
 }) => {
   return (
     <section className="w-full py-12 px-4 md:px-12 bg-white overflow-hidden">
-      <div className="max-w-7xl mx-auto relative rounded-3xl md:rounded-[2.5rem] overflow-hidden shadow-2xl h-[480px] sm:h-[540px] md:h-[600px] flex flex-col justify-between p-8 sm:p-12 md:p-16">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 40 }}
+        whileInView={{ opacity: 1, scale: 1, y: 0 }}
+        viewport={{ once: true, margin: "-60px" }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="max-w-7xl mx-auto relative rounded-3xl md:rounded-[2.5rem] overflow-hidden shadow-2xl h-[480px] sm:h-[540px] md:h-[600px] flex flex-col justify-between p-8 sm:p-12 md:p-16"
+      >
         
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
@@ -35,7 +42,7 @@ export const MidBanner: React.FC<MidBannerProps> = ({
         {/* Bottom Right CTA Button */}
         <div className="relative z-10 flex justify-end pt-8">
           <a
-            href="#get-started"
+            href="#contact"
             className="inline-flex items-center gap-3 pl-6 pr-2 py-2 rounded-full bg-[#0a111e] text-white font-semibold text-sm hover:bg-slate-900 transition-all shadow-xl hover:shadow-2xl group border border-white/10"
           >
             <span>Get Started</span>
@@ -45,7 +52,7 @@ export const MidBanner: React.FC<MidBannerProps> = ({
           </a>
         </div>
 
-      </div>
+      </motion.div>
     </section>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface NewsArticle {
   id: string;
@@ -61,25 +62,25 @@ export const News: React.FC = () => {
   const [startX, setStartX] = useState(0);
   const [scrollLeftState, setScrollLeftState] = useState(0);
 
-  // Auto-play sliding interval every 3.5 seconds
+  // Auto slide interval (3.5s)
   useEffect(() => {
     if (isPaused || isMouseDown) return;
 
     const timer = setInterval(() => {
-      if (!sliderRef.current) return;
-      const { scrollLeft, scrollWidth, clientWidth } = sliderRef.current;
-      
-      // If reached near end, scroll back smoothly to start
-      if (scrollLeft + clientWidth >= scrollWidth - 20) {
-        sliderRef.current.scrollTo({ left: 0, behavior: 'smooth' });
-      } else {
-        sliderRef.current.scrollBy({ left: 300, behavior: 'smooth' });
+      if (sliderRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = sliderRef.current;
+        if (scrollLeft + clientWidth >= scrollWidth - 10) {
+          sliderRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          sliderRef.current.scrollBy({ left: 340, behavior: 'smooth' });
+        }
       }
     }, 3500);
 
     return () => clearInterval(timer);
   }, [isPaused, isMouseDown]);
 
+  // Drag to scroll handlers
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!sliderRef.current) return;
     setIsMouseDown(true);
@@ -89,7 +90,6 @@ export const News: React.FC = () => {
 
   const handleMouseLeave = () => {
     setIsMouseDown(false);
-    setIsPaused(false);
   };
 
   const handleMouseUp = () => {
@@ -119,7 +119,13 @@ export const News: React.FC = () => {
       <div className="w-full max-w-7xl mx-auto flex flex-col items-center gap-14 text-center">
 
         {/* Section Header */}
-        <div className="flex flex-col items-center gap-3 px-4 md:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6 }}
+          className="flex flex-col items-center gap-3 px-4 md:px-8"
+        >
           <span className="text-xs font-semibold text-slate-500 uppercase tracking-widest block">
             Latest Info
           </span>
@@ -127,10 +133,14 @@ export const News: React.FC = () => {
             <span className="font-extrabold text-slate-950">Catch up on today's top updates</span>{' '}
             <span className="font-light text-slate-600">and the stories that matter most</span>
           </h2>
-        </div>
+        </motion.div>
 
         {/* Full-Width Mouse Drag & Touch Scrollable Track with Auto-Play */}
-        <div
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, delay: 0.2 }}
           className="w-full relative"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
@@ -141,82 +151,72 @@ export const News: React.FC = () => {
             onMouseLeave={handleMouseLeave}
             onMouseUp={handleMouseUp}
             onMouseMove={handleMouseMove}
-            className="flex overflow-x-auto gap-5 md:gap-6 py-4 px-4 md:px-8 cursor-grab active:cursor-grabbing scroll-smooth no-scrollbar"
+            className="flex items-center gap-6 overflow-x-auto scrollbar-none px-6 md:px-12 py-4 cursor-grab active:cursor-grabbing scroll-smooth"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {ARTICLES.map((article) => (
               <div
                 key={article.id}
-                className="w-[260px] sm:w-[280px] lg:w-[calc(25%-0.95rem)] lg:min-w-[270px] rounded-[2rem] relative overflow-hidden h-[420px] p-6 flex flex-col justify-between text-white group shadow-none transition-all duration-500 shrink-0 bg-slate-100"
+                className="w-[280px] sm:w-[320px] md:w-[340px] h-[400px] sm:h-[430px] rounded-[2rem] overflow-hidden relative shrink-0 shadow-none border border-slate-100 group flex flex-col justify-between p-6 sm:p-8 cursor-pointer"
               >
-                {/* Background Image - Clean & Unshaded */}
-                <div className="absolute inset-0 z-0 pointer-events-none">
+                {/* Background Image - Pure Brightness */}
+                <div className="absolute inset-0 z-0">
                   <img
                     src={article.image}
-                    alt={`${article.boldTitle} ${article.lightTitle}`}
+                    alt={article.boldTitle}
                     loading="lazy"
                     onError={(e) => {
                       (e.currentTarget as HTMLImageElement).src = 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=800&auto=format&fit=crop&q=80';
                     }}
-                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 opacity-100"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 brightness-100"
                   />
-                  {/* Subtle Text Contrast Layer */}
-                  <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-slate-950/70 to-transparent" />
+                  
+                  {/* Gentle gradient overlay for pure white text readability */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10" />
                 </div>
 
-                {/* Top Row: Arrow Button Icon */}
-                <div className="relative z-10 flex justify-end pointer-events-none">
-                  <div className="w-10 h-10 rounded-full bg-slate-900/60 backdrop-blur-md border border-white/30 text-white flex items-center justify-center group-hover:bg-[#00e599] group-hover:text-black group-hover:border-[#00e599] transition-all duration-300 shadow-md">
-                    <ArrowRight className="w-4 h-4 -rotate-45 text-white group-hover:text-black" />
-                  </div>
-                </div>
-
-                {/* Bottom Content: Date & Headline - Pure White Text */}
-                <div className="relative z-10 space-y-2 text-left pointer-events-none">
-                  <span className="text-[11px] font-medium text-white tracking-wide block font-sans drop-shadow-sm">
+                {/* Top Row: Date Pill */}
+                <div className="relative z-10 self-start">
+                  <span className="inline-block px-4 py-1.5 rounded-full bg-white/20 border border-white/30 backdrop-blur-md text-[11px] font-semibold text-white tracking-wide shadow-sm">
                     {article.date}
                   </span>
-                  <h3 className="text-lg md:text-xl leading-snug tracking-tight line-clamp-3 text-white drop-shadow-sm">
-                    <span className="font-bold text-white">{article.boldTitle}</span>{' '}
-                    <span className="font-light text-white">{article.lightTitle}</span>
+                </div>
+
+                {/* Bottom Row: Typography & Circle Arrow Button */}
+                <div className="relative z-10 text-left space-y-4 pt-12">
+                  <h3 className="text-xl sm:text-2xl leading-[1.25] text-white tracking-tight">
+                    <span className="font-extrabold block text-white drop-shadow-sm">{article.boldTitle}</span>
+                    <span className="font-light block text-white/95 mt-0.5">{article.lightTitle}</span>
                   </h3>
+
+                  <div className="flex items-center justify-start pt-2">
+                    <div className="w-10 h-10 rounded-full bg-white/20 border border-white/30 backdrop-blur-md flex items-center justify-center text-white group-hover:bg-white group-hover:text-slate-950 transition-all shadow-md">
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
-        </div>
 
-        {/* Controls & Show All Button Row */}
-        <div className="flex flex-col sm:flex-row items-center gap-6 pt-2">
-          {/* Slide Navigation Controls */}
-          <div className="flex items-center gap-3">
+          {/* Prev/Next Overlay Controls for Desktop */}
+          <div className="hidden md:flex items-center justify-between pointer-events-none absolute inset-0 px-4">
             <button
               onClick={scrollPrev}
-              className="w-10 h-10 rounded-full border border-slate-300 text-slate-800 flex items-center justify-center hover:bg-[#0a111e] hover:text-white hover:border-[#0a111e] transition-all cursor-pointer shadow-sm"
-              aria-label="Previous article"
+              className="pointer-events-auto w-12 h-12 rounded-full bg-white/90 border border-slate-200 text-slate-800 flex items-center justify-center shadow-lg hover:bg-[#0a111e] hover:text-white transition-all active:scale-95"
+              aria-label="Previous News"
             >
-              <ChevronLeft className="w-5 h-5" />
+              <ChevronLeft className="w-6 h-6" />
             </button>
             <button
               onClick={scrollNext}
-              className="w-10 h-10 rounded-full border border-slate-300 text-slate-800 flex items-center justify-center hover:bg-[#0a111e] hover:text-white hover:border-[#0a111e] transition-all cursor-pointer shadow-sm"
-              aria-label="Next article"
+              className="pointer-events-auto w-12 h-12 rounded-full bg-white/90 border border-slate-200 text-slate-800 flex items-center justify-center shadow-lg hover:bg-[#0a111e] hover:text-white transition-all active:scale-95"
+              aria-label="Next News"
             >
-              <ChevronRight className="w-5 h-5" />
+              <ChevronRight className="w-6 h-6" />
             </button>
           </div>
-
-          {/* Show All CTA Button */}
-          <a
-            href="#news"
-            className="inline-flex items-center gap-3 pl-6 pr-2 py-2 rounded-full bg-[#0a111e] text-white font-semibold text-xs sm:text-sm hover:bg-slate-800 transition-all shadow-md group border border-slate-800"
-          >
-            <span>Show All</span>
-            <div className="w-7 h-7 rounded-full bg-white flex items-center justify-center text-slate-950 group-hover:translate-x-0.5 transition-transform">
-              <ArrowRight className="w-3.5 h-3.5" />
-            </div>
-          </a>
-        </div>
+        </motion.div>
 
       </div>
     </section>

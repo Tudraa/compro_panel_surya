@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowRight, Plus, Minus } from 'lucide-react';
+import { motion } from 'framer-motion';
 import manInstallationImg2 from '../assets/man_installation_on_roft_2.jpeg';
 
 interface ServiceItem {
@@ -64,7 +65,13 @@ export const Services: React.FC = () => {
       <div className="max-w-6xl mx-auto flex flex-col gap-16">
 
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 pb-4">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6 }}
+          className="flex flex-col md:flex-row md:items-end justify-between gap-8 pb-4"
+        >
           <div className="max-w-xl">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 leading-[1.18] tracking-tight">
               Smart services designed for a sustainable future.
@@ -85,7 +92,7 @@ export const Services: React.FC = () => {
               </div>
             </a>
           </div>
-        </div>
+        </motion.div>
 
         {/* Accordion List */}
         <div className="w-full divide-y divide-slate-200/90 border-t border-b border-slate-200/90">
@@ -93,7 +100,14 @@ export const Services: React.FC = () => {
             const isOpen = openIndex === index;
 
             return (
-              <div key={service.id} className="w-full py-2 transition-colors">
+              <motion.div
+                key={service.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="w-full py-2 transition-colors"
+              >
                 
                 {/* Accordion Header Bar */}
                 <button
@@ -183,7 +197,7 @@ export const Services: React.FC = () => {
                   </div>
                 </div>
 
-              </div>
+              </motion.div>
             );
           })}
         </div>
