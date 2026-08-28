@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowRight, Plus, Minus } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface FAQItem {
   id: string;
@@ -43,7 +44,13 @@ export const FAQ: React.FC = () => {
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
 
         {/* Left Column: Title & CTA Button */}
-        <div className="lg:col-span-5 flex flex-col items-start gap-8">
+        <motion.div
+          initial={{ opacity: 0, x: -40 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.7 }}
+          className="lg:col-span-5 flex flex-col items-start gap-8"
+        >
           <div className="space-y-3">
             <span className="text-xs font-semibold text-slate-500 uppercase tracking-widest block">
               FAQ
@@ -64,10 +71,16 @@ export const FAQ: React.FC = () => {
               <ArrowRight className="w-3.5 h-3.5" />
             </div>
           </a>
-        </div>
+        </motion.div>
 
         {/* Right Column: Accordion Items */}
-        <div className="lg:col-span-7 flex flex-col divide-y divide-slate-200/80">
+        <motion.div
+          initial={{ opacity: 0, x: 40 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.7 }}
+          className="lg:col-span-7 flex flex-col divide-y divide-slate-200/80"
+        >
           {FAQ_DATA.map((item) => {
             const isOpen = openId === item.id;
 
@@ -106,7 +119,7 @@ export const FAQ: React.FC = () => {
               </div>
             );
           })}
-        </div>
+        </motion.div>
 
       </div>
     </section>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowUpRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface ProjectItem {
   id: string;
@@ -47,7 +48,13 @@ export const Projects: React.FC = () => {
       <div className="max-w-6xl mx-auto flex flex-col gap-16">
 
         {/* Section Header Row */}
-        <div className="flex flex-col items-center text-center gap-4">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6 }}
+          className="flex flex-col items-center text-center gap-4"
+        >
           <span className="text-xs font-semibold text-slate-400 uppercase tracking-widest">
             Our Project
           </span>
@@ -64,13 +71,17 @@ export const Projects: React.FC = () => {
               <ArrowUpRight className="w-4 h-4 text-white group-hover:text-slate-900 transition-colors" />
             </a>
           </div>
-        </div>
+        </motion.div>
 
         {/* Staggered Portfolio Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12">
           {PROJECTS.map((project, index) => (
-            <div
+            <motion.div
               key={project.id}
+              initial={{ opacity: 0, y: 60 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: index * 0.15 }}
               className={`flex flex-col gap-4 group cursor-pointer ${
                 index % 2 === 1 ? 'md:mt-12' : ''
               }`}
@@ -106,7 +117,7 @@ export const Projects: React.FC = () => {
                   <ArrowUpRight className="w-4 h-4" />
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
 

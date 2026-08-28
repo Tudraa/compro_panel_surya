@@ -1,5 +1,6 @@
 import React from 'react';
 import { Home, Eye } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface ValuePropositionProps {
   visionImgUrl?: string;
@@ -20,9 +21,15 @@ export const ValueProposition: React.FC<ValuePropositionProps> = ({
       <div className="max-w-6xl mx-auto flex flex-col gap-14">
 
         {/* Top Mission Statement Header */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6 }}
+          className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start"
+        >
           <div className="md:col-span-4">
-            <span className="text-xs font-semibold text-slate-500 tracking-wider block pt-2">
+            <span className="text-xs font-semibold text-slate-500 tracking-wider block pt-2 uppercase">
               Our Mission
             </span>
           </div>
@@ -31,13 +38,19 @@ export const ValueProposition: React.FC<ValuePropositionProps> = ({
               We drive innovation and improvement to create cost-effective, eco-friendly products powered by renewable energy.
             </h2>
           </div>
-        </div>
+        </motion.div>
 
         {/* 3 Value Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
 
           {/* Card 1: Dark Navy Stats Card */}
-          <div className="rounded-3xl bg-[#061d28] p-8 text-white flex flex-col justify-between min-h-[380px] md:min-h-[420px] shadow-lg relative overflow-hidden group">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="rounded-3xl bg-[#061d28] p-8 text-white flex flex-col justify-between min-h-[380px] md:min-h-[420px] shadow-lg relative overflow-hidden group"
+          >
             {/* Top Row: Label & Circle Icon */}
             <div className="flex items-start justify-between">
               <span className="text-xs font-normal text-slate-300/90 tracking-wide">
@@ -64,10 +77,16 @@ export const ValueProposition: React.FC<ValuePropositionProps> = ({
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Card 2: Image Overlay Vision Card */}
-          <div className="rounded-3xl relative overflow-hidden min-h-[380px] md:min-h-[420px] shadow-lg group">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.25 }}
+            className="rounded-3xl relative overflow-hidden min-h-[380px] md:min-h-[420px] shadow-lg group"
+          >
             <img
               src={visionImgUrl}
               alt="Solar Engineer inspects installation"
@@ -90,10 +109,16 @@ export const ValueProposition: React.FC<ValuePropositionProps> = ({
                 Provide product and services of the highest possible standarts to satisfy our costumer
               </p>
             </div>
-          </div>
+          </motion.div>
 
           {/* Card 3: Light Gray Hashtag Card */}
-          <div className="rounded-3xl bg-[#f2f4f7] p-8 text-slate-900 flex flex-col justify-between min-h-[380px] md:min-h-[420px] shadow-sm">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="rounded-3xl bg-[#f2f4f7] p-8 text-slate-900 flex flex-col justify-between min-h-[380px] md:min-h-[420px] shadow-sm"
+          >
             {/* Headline */}
             <div>
               <h3 className="text-xl md:text-[1.4rem] font-bold text-slate-900 leading-snug tracking-tight max-w-xs">
@@ -112,7 +137,7 @@ export const ValueProposition: React.FC<ValuePropositionProps> = ({
                 </span>
               ))}
             </div>
-          </div>
+          </motion.div>
 
         </div>
 

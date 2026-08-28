@@ -1,6 +1,7 @@
 import React from 'react';
 import { Zap, RotateCw, Percent } from 'lucide-react';
 import RawMarquee from 'react-fast-marquee';
+import { motion } from 'framer-motion';
 
 // Interop fix for react-fast-marquee in Vite / React 19 ESM bundler
 const Marquee = (RawMarquee as any)?.default?.default || (RawMarquee as any)?.default || RawMarquee;
@@ -31,10 +32,16 @@ export const About: React.FC<AboutProps> = ({
   return (
     <section id="about" className="w-full bg-white py-24 text-center overflow-hidden">
       {/* Centered Content Container - Expanded Full Width */}
-      <div className="max-w-6xl mx-auto px-6 md:px-16 flex flex-col items-center">
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-60px" }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
+        className="max-w-6xl mx-auto px-6 md:px-16 flex flex-col items-center"
+      >
 
         {/* Section Subtitle */}
-        <span className="text-xs font-semibold text-slate-400 tracking-wider mb-6 block">
+        <span className="text-xs font-semibold text-slate-400 tracking-wider mb-6 block uppercase">
           About Us
         </span>
 
@@ -48,33 +55,37 @@ export const About: React.FC<AboutProps> = ({
 
         {/* 3 Feature Circles (Energy, Effective, Affordable) */}
         <div className="flex items-center justify-center gap-8 md:gap-12 mb-16">
-          {/* Energy */}
-          <div className="flex flex-col items-center gap-2.5 group cursor-pointer">
-            <div className="w-16 h-16 rounded-full bg-white border border-slate-200 text-slate-800 flex items-center justify-center shadow-sm group-hover:bg-[#0a111e] group-hover:text-white group-hover:border-[#0a111e] group-hover:scale-105 group-hover:shadow-md transition-all duration-300">
-              <Zap className="w-6 h-6" />
-            </div>
-            <span className="text-xs font-semibold text-slate-600 group-hover:text-slate-900 transition-colors">Energy</span>
-          </div>
-
-          {/* Effective */}
-          <div className="flex flex-col items-center gap-2.5 group cursor-pointer">
-            <div className="w-16 h-16 rounded-full bg-white border border-slate-200 text-slate-800 flex items-center justify-center shadow-sm group-hover:bg-[#0a111e] group-hover:text-white group-hover:border-[#0a111e] group-hover:scale-105 group-hover:shadow-md transition-all duration-300">
-              <RotateCw className="w-6 h-6" />
-            </div>
-            <span className="text-xs font-semibold text-slate-600 group-hover:text-slate-900 transition-colors">Effective</span>
-          </div>
-
-          {/* Affordable */}
-          <div className="flex flex-col items-center gap-2.5 group cursor-pointer">
-            <div className="w-16 h-16 rounded-full bg-white border border-slate-200 text-slate-800 flex items-center justify-center shadow-sm group-hover:bg-[#0a111e] group-hover:text-white group-hover:border-[#0a111e] group-hover:scale-105 group-hover:shadow-md transition-all duration-300">
-              <Percent className="w-6 h-6" />
-            </div>
-            <span className="text-xs font-semibold text-slate-600 group-hover:text-slate-900 transition-colors">Affordable</span>
-          </div>
+          {[
+            { icon: Zap, label: "Energy" },
+            { icon: RotateCw, label: "Effective" },
+            { icon: Percent, label: "Affordable" },
+          ].map((item, idx) => (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: idx * 0.15 }}
+              className="flex flex-col items-center gap-2.5 group cursor-pointer"
+            >
+              <div className="w-16 h-16 rounded-full bg-white border border-slate-200 text-slate-800 flex items-center justify-center shadow-sm group-hover:bg-[#0a111e] group-hover:text-white group-hover:border-[#0a111e] group-hover:scale-105 group-hover:shadow-md transition-all duration-300">
+                <item.icon className="w-6 h-6" />
+              </div>
+              <span className="text-xs font-semibold text-slate-600 group-hover:text-slate-900 transition-colors">
+                {item.label}
+              </span>
+            </motion.div>
+          ))}
         </div>
 
         {/* 2 Side-by-Side Rounded Images */}
-        <div className="grid grid-cols-2 gap-4 md:gap-6 max-w-lg w-full mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="grid grid-cols-2 gap-4 md:gap-6 max-w-lg w-full mb-16"
+        >
           <div className="aspect-square rounded-2xl overflow-hidden shadow-md border border-slate-100 bg-slate-100 group">
             <img
               src={img1Url}
@@ -89,11 +100,17 @@ export const About: React.FC<AboutProps> = ({
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       {/* Full-Width Infinite Scrolling Marquee for Partner / Client Logos */}
-      <div className="w-full border-t border-slate-100 pt-12">
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="w-full border-t border-slate-100 pt-12"
+      >
         <Marquee
           gradient={true}
           gradientColor="255, 255, 255"
@@ -110,7 +127,7 @@ export const About: React.FC<AboutProps> = ({
             ))}
           </div>
         </Marquee>
-      </div>
+      </motion.div>
     </section>
   );
 };
