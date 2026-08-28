@@ -120,7 +120,7 @@ export const Testimonials: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.6 }}
-          className="flex flex-col items-center gap-3 px-4 md:px-8"
+          className="flex flex-col items-center gap-4 px-4 md:px-8 text-center"
         >
           <span className="text-xs font-semibold text-slate-500 uppercase tracking-widest block">
             Testimonials
@@ -129,6 +129,16 @@ export const Testimonials: React.FC = () => {
             <span className="font-extrabold text-slate-950">Trusted by many,</span>{' '}
             <span className="font-light text-slate-600 block sm:inline">loved by more</span>
           </h2>
+
+          {/* Stat Badge Pills Row (Outside of cards) */}
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+            <span className="px-4 py-2 rounded-full bg-[#06131c] text-white text-xs font-semibold tracking-wide shadow-md">
+              100+ country client
+            </span>
+            <span className="px-4 py-2 rounded-full bg-[#06131c] text-white text-xs font-semibold tracking-wide shadow-md">
+              $68B in revenue
+            </span>
+          </div>
         </motion.div>
 
         {/* Sliding Viewport Container - Auto-Play + Mouse Drag */}
@@ -172,16 +182,6 @@ export const Testimonials: React.FC = () => {
                     }}
                     className="w-full h-full object-cover object-center"
                   />
-
-                  {/* Stat Badge Overlay Pills */}
-                  <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
-                    <span className="inline-block px-3 py-1.5 rounded-full bg-slate-950/70 border border-white/20 backdrop-blur-md text-[10px] sm:text-xs font-medium text-white tracking-wide shadow-md">
-                      100+ country client
-                    </span>
-                    <span className="inline-block px-3 py-1.5 rounded-full bg-slate-950/70 border border-white/20 backdrop-blur-md text-[10px] sm:text-xs font-medium text-white tracking-wide shadow-md">
-                      $68B in revenue
-                    </span>
-                  </div>
                 </div>
 
                 {/* Right Quote Text Box - Directly Joined without Space */}
